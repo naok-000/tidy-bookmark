@@ -1,7 +1,17 @@
 package bookmark
 
+import "github.com/google/uuid"
+
 type Bookmark struct {
+	id  uuid.UUID
 	URL string
+}
+
+func NewBookmark(url string) Bookmark {
+	return Bookmark{
+		id:  uuid.New(),
+		URL: url,
+	}
 }
 
 type BookmarkList struct {
@@ -9,5 +19,5 @@ type BookmarkList struct {
 }
 
 func (l *BookmarkList) Add(url string) {
-	l.Items = append(l.Items, Bookmark{URL: url})
+	l.Items = append(l.Items, NewBookmark(url))
 }
