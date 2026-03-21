@@ -27,6 +27,10 @@ func (l *BookmarkList) Add(url string) {
 	l.Items = append(l.Items, NewBookmark(url))
 }
 
+func (l *BookmarkList) Remove(index int) {
+	l.Items = append(l.Items[:index], l.Items[index+1:]...)
+}
+
 func (l *BookmarkList) Show() string {
 	var result strings.Builder
 	for i, item := range l.Items {
