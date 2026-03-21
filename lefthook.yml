@@ -10,7 +10,8 @@ pre-commit:
       run: goimports -w {staged_files}
       stage_fixed: true
     - name: lint
-      run: golangci-lint run ./...
+      run: golangci-lint run --new-from-rev HEAD --fix
+      glob: "*.go"
 
 pre-push:
   jobs:
