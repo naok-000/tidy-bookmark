@@ -3,18 +3,14 @@ package bookmark
 import (
 	"strconv"
 	"strings"
-
-	"github.com/google/uuid"
 )
 
 type Bookmark struct {
-	id  uuid.UUID
 	URL string
 }
 
 func NewBookmark(url string) Bookmark {
 	return Bookmark{
-		id:  uuid.New(),
 		URL: url,
 	}
 }

@@ -2,8 +2,6 @@ package bookmark
 
 import (
 	"testing"
-
-	"github.com/google/uuid"
 )
 
 func TestBookmarkListAdd(t *testing.T) {
@@ -22,17 +20,10 @@ func TestBookmarkListAdd(t *testing.T) {
 		t.Fatalf("expected first URL %q, got %q", url0, list.Items[0].URL)
 	}
 
-	if list.Items[0].id == uuid.Nil {
-		t.Fatal("expected non-empty ID for first bookmark")
-	}
-
 	if list.Items[1].URL != url1 {
 		t.Fatalf("expected second URL %q, got %q", url1, list.Items[1].URL)
 	}
 
-	if list.Items[1].id == uuid.Nil {
-		t.Fatal("expected non-empty ID for second bookmark")
-	}
 }
 
 func TestBookmarkListShow(t *testing.T) {
