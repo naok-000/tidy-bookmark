@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func TestBookmarkList(t *testing.T) {
+func TestBookmarkListAdd(t *testing.T) {
 	var list BookmarkList
 	url0 := "https://x.com/nao_k000/status/1948052943485210629"
 	url1 := "https://github.com/naok-000/tidy-bookmark/blob/main/LICENSE"
@@ -32,5 +32,17 @@ func TestBookmarkList(t *testing.T) {
 
 	if list.Items[1].id == uuid.Nil {
 		t.Fatal("expected non-empty ID for second bookmark")
+	}
+}
+
+func TestBookmarkListShow(t *testing.T) {
+	var list BookmarkList
+	url0 := "https://x.com/nao_k000/status/1948052943485210629"
+	url1 := "https://github.com/naok-000/tidy-bookmark/blob/main/LICENSE"
+	list.Add(url0)
+	list.Add(url1)
+
+	if list.Show() != "1. "+url0+"\n2. "+url1+"\n" {
+		t.Fatalf("unexpected Show output:\n%s", list.Show())
 	}
 }

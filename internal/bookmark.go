@@ -1,6 +1,11 @@
 package bookmark
 
-import "github.com/google/uuid"
+import (
+	"strconv"
+	"strings"
+
+	"github.com/google/uuid"
+)
 
 type Bookmark struct {
 	id  uuid.UUID
@@ -20,4 +25,12 @@ type BookmarkList struct {
 
 func (l *BookmarkList) Add(url string) {
 	l.Items = append(l.Items, NewBookmark(url))
+}
+
+func (l *BookmarkList) Show() string {
+	var result strings.Builder
+	for i, item := range l.Items {
+		result.WriteString(strconv.Itoa(i+1) + ". " + item.URL + "\n")
+	}
+	return result.String()
 }
