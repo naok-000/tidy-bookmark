@@ -20,6 +20,7 @@
           gopls
           gotools
           golangci-lint
+          lefthook
         ];
         buildInputs = with pkgs; [];
       in {
