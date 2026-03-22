@@ -2,9 +2,12 @@
 
 ## Overview
 
-We are building *Tidy Bookmark*, a bookmark manager that helps users organize their bookmarks efficiently.
+We are building _Tidy Bookmark_, a bookmark manager that helps users organize their bookmarks efficiently.
+
+## Development Approach: Test-Driven Development (TDD)
+
+Adopt Test-Driven Development as advocated by Kent Beck and t_wada.
 
 ## Docs
 
 - `docs/` - Empty for now.
-
