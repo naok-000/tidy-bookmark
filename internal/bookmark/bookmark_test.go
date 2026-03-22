@@ -33,7 +33,7 @@ func TestBookmarkListShow(t *testing.T) {
 	list.Add(url0)
 	list.Add(url1)
 
-	if list.Show() != "1. "+url0+"\n2. "+url1+"\n" {
+	if list.Show() != "0. "+url0+"\n1. "+url1+"\n" {
 		t.Fatalf("unexpected Show output:\n%s", list.Show())
 	}
 }

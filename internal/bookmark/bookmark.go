@@ -30,7 +30,7 @@ func (l *BookmarkList) Remove(index int) {
 func (l *BookmarkList) Show() string {
 	var result strings.Builder
 	for i, item := range l.Items {
-		result.WriteString(strconv.Itoa(i+1) + ". " + item.URL + "\n")
+		result.WriteString(strconv.Itoa(i) + ". " + item.URL + "\n")
 	}
 	return result.String()
 }
