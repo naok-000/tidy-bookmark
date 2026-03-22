@@ -1,8 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"tidy-bookmark/internal/cli"
+)
 
-func main(){
-	fmt.Println("Hello World")
+func main() {
+
+	cli.Execute()
 }
-
