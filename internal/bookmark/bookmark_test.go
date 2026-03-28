@@ -90,3 +90,22 @@ func TestRemoveLoadsAndSavesUpdatedList(t *testing.T) {
 		t.Fatalf("expected second URL %q, got %q", "https://golang.org", store.savedList[1].URL)
 	}
 }
+
+func TestRemoveReturnsErrorWhenIndexIsOutOfRange(t *testing.T) {
+	store := &fakeStore{
+		loadList: []Bookmark{
+			{URL: "https://go.dev"},
+		},
+	}
+
+	defer func() {
+		if r := recover(); r != nil {
+			t.Fatalf("expected error, got panic: %v", r)
+		}
+	}()
+
+	err := Remove(store, 1)
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+}

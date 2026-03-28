@@ -1,6 +1,7 @@
 package bookmark
 
 import (
+	"errors"
 	"strconv"
 	"strings"
 )
@@ -49,6 +50,10 @@ func Remove(store Store, index int) error {
 	bookmarks, err := store.Load()
 	if err != nil {
 		return err
+	}
+
+	if index < 0 || index >= len(bookmarks) {
+		return errors.New("bookmark ID out of range")
 	}
 
 	bookmarks = append(bookmarks[:index], bookmarks[index+1:]...)
