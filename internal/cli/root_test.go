@@ -2,7 +2,10 @@ package cli
 
 import (
 	"bytes"
+	"path/filepath"
 	"testing"
+
+	storepkg "tidy-bookmark/internal/store"
 
 	"github.com/spf13/cobra"
 )
@@ -18,7 +21,7 @@ func executeCommand(root *cobra.Command, args ...string) (string, error) {
 }
 
 func TestAddCommand(t *testing.T) {
-	cmd := newRootCmd()
+	cmd := newRootCmd(storepkg.FileStore{Path: filepath.Join(t.TempDir(), "bookmarks.txt")})
 
 	out, err := executeCommand(cmd, "add", "https://go.dev")
 	if err != nil {
@@ -31,7 +34,7 @@ func TestAddCommand(t *testing.T) {
 }
 
 func TestListCommand(t *testing.T) {
-	cmd := newRootCmd()
+	cmd := newRootCmd(storepkg.FileStore{Path: filepath.Join(t.TempDir(), "bookmarks.txt")})
 
 	_, err := executeCommand(cmd, "list")
 	if err != nil {
@@ -40,7 +43,7 @@ func TestListCommand(t *testing.T) {
 }
 
 func TestRemoveCommand(t *testing.T) {
-	cmd := newRootCmd()
+	cmd := newRootCmd(storepkg.FileStore{Path: filepath.Join(t.TempDir(), "bookmarks.txt")})
 
 	_, _ = executeCommand(cmd, "add", "https://go.dev")
 

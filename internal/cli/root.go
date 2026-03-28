@@ -7,47 +7,50 @@ import (
 	"strconv"
 
 	"tidy-bookmark/internal/bookmark"
+	storepkg "tidy-bookmark/internal/store"
 
 	"github.com/spf13/cobra"
 )
 
-func newRootCmd() *cobra.Command {
-	list := &bookmark.BookmarkList{}
-
+func newRootCmd(store bookmark.Store) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "tidy-bookmark",
 		Short: "Manage bookmarks from the command line",
 		Long:  "Tidy Bookmark is a CLI for organizing and managing bookmarks.",
 	}
 
-	cmd.AddCommand(newAddCmd(list), newListCmd(list), newRemoveCmd(list))
+	cmd.AddCommand(newAddCmd(store), newListCmd(store), newRemoveCmd(store))
 
 	return cmd
 }
 
-func newAddCmd(list *bookmark.BookmarkList) *cobra.Command {
+func newAddCmd(store bookmark.Store) *cobra.Command {
 	return &cobra.Command{
 		Use:  "add URL",
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			list.Add(args[0])
-			return nil
+			return bookmark.Add(store, args[0])
 		},
 	}
 }
 
-func newListCmd(list *bookmark.BookmarkList) *cobra.Command {
+func newListCmd(store bookmark.Store) *cobra.Command {
 	return &cobra.Command{
 		Use:  "list",
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			_, err := io.WriteString(cmd.OutOrStdout(), list.Show())
+			list, err := bookmark.List(store)
+			if err != nil {
+				return err
+			}
+
+			_, err = io.WriteString(cmd.OutOrStdout(), list)
 			return err
 		},
 	}
 }
 
-func newRemoveCmd(list *bookmark.BookmarkList) *cobra.Command {
+func newRemoveCmd(store bookmark.Store) *cobra.Command {
 	return &cobra.Command{
 		Use:  "remove ID",
 		Args: cobra.ExactArgs(1),
@@ -56,14 +59,13 @@ func newRemoveCmd(list *bookmark.BookmarkList) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("invalid ID: %s", args[0])
 			}
-			list.Remove(id)
-			return nil
+			return bookmark.Remove(store, id)
 		},
 	}
 }
 
 func Execute() {
-	err := newRootCmd().Execute()
+	err := newRootCmd(storepkg.FileStore{Path: "bookmarks.txt"}).Execute()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
