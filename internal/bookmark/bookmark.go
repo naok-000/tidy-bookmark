@@ -10,8 +10,8 @@ type Bookmark struct {
 }
 
 type Store interface {
-	Load() (BookmarkList, error)
-	Save(BookmarkList) error
+	Load() ([]Bookmark, error)
+	Save([]Bookmark) error
 }
 
 func NewBookmark(url string) Bookmark {
@@ -20,53 +20,38 @@ func NewBookmark(url string) Bookmark {
 	}
 }
 
-type BookmarkList struct {
-	Items []Bookmark
-}
-
-func (l *BookmarkList) Add(url string) {
-	l.Items = append(l.Items, NewBookmark(url))
-}
-
 func Add(store Store, url string) error {
-	list, err := store.Load()
+	bookmarks, err := store.Load()
 	if err != nil {
 		return err
 	}
 
-	list.Add(url)
+	bookmarks = append(bookmarks, NewBookmark(url))
 
-	return store.Save(list)
+	return store.Save(bookmarks)
 }
 
 func List(store Store) (string, error) {
-	list, err := store.Load()
+	bookmarks, err := store.Load()
 	if err != nil {
 		return "", err
 	}
 
-	return list.Show(), nil
-}
+	var result strings.Builder
+	for i, bookmark := range bookmarks {
+		result.WriteString(strconv.Itoa(i) + ". " + bookmark.URL + "\n")
+	}
 
-func (l *BookmarkList) Remove(index int) {
-	l.Items = append(l.Items[:index], l.Items[index+1:]...)
+	return result.String(), nil
 }
 
 func Remove(store Store, index int) error {
-	list, err := store.Load()
+	bookmarks, err := store.Load()
 	if err != nil {
 		return err
 	}
 
-	list.Remove(index)
+	bookmarks = append(bookmarks[:index], bookmarks[index+1:]...)
 
-	return store.Save(list)
-}
-
-func (l *BookmarkList) Show() string {
-	var result strings.Builder
-	for i, item := range l.Items {
-		result.WriteString(strconv.Itoa(i) + ". " + item.URL + "\n")
-	}
-	return result.String()
+	return store.Save(bookmarks)
 }

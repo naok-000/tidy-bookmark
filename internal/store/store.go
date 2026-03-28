@@ -13,35 +13,35 @@ type FileStore struct {
 	Path string
 }
 
-func (s FileStore) Load() (bookmark.BookmarkList, error) {
+func (s FileStore) Load() ([]bookmark.Bookmark, error) {
 	file, err := os.Open(s.Path)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			return bookmark.BookmarkList{}, nil
+			return nil, nil
 		}
-		return bookmark.BookmarkList{}, err
+		return nil, err
 	}
 
-	var list bookmark.BookmarkList
+	var bookmarks []bookmark.Bookmark
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		list.Add(scanner.Text())
+		bookmarks = append(bookmarks, bookmark.NewBookmark(scanner.Text()))
 	}
 
 	if err := scanner.Err(); err != nil {
-		return bookmark.BookmarkList{}, errors.Join(err, file.Close())
+		return nil, errors.Join(err, file.Close())
 	}
 
 	if err := file.Close(); err != nil {
-		return bookmark.BookmarkList{}, err
+		return nil, err
 	}
 
-	return list, nil
+	return bookmarks, nil
 }
 
-func (s FileStore) Save(list bookmark.BookmarkList) error {
+func (s FileStore) Save(bookmarks []bookmark.Bookmark) error {
 	var content strings.Builder
-	for _, item := range list.Items {
+	for _, item := range bookmarks {
 		content.WriteString(item.URL)
 		content.WriteString("\n")
 	}
